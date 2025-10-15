@@ -17,6 +17,7 @@ import { useState } from "react";
 import PageTitle from "../components/PageTitle";
 import Flashcard from "../components/Flashcard";
 import AddCardModal from "../components/AddCardModal";
+import { saveFlashcards, fetchFlashcards, loadFlashcards } from "../utils/api";
 
 export default function FlashcardPage() {
 
@@ -91,6 +92,39 @@ export default function FlashcardPage() {
     setCards(newCards);
   }
 
+  /*
+  * This function is called when the "Save Flashcards" button is clicked.
+  * It sends the current list of flashcards to the backend server to be saved.
+  */
+  function handleSave() {
+    saveFlashcards(cards)
+      .then(response => {
+        alert("Flashcards saved successfully!");
+      })
+      .catch(error => {
+        alert("Failed to save flashcards.");
+        console.error("Error saving flashcards:", error);
+      });
+  }
+
+  /*
+  * This function is called when the "Load Flashcards" button is clicked.
+  * It fetches the list of flashcards from the backend server.
+  */
+  async function handleLoad() {
+    loadFlashcards()
+      .then(fetchedCards => {
+        // Update the state with the fetched cards
+        setCards(fetchedCards);
+        alert("Flashcards loaded successfully!");
+      })
+      .catch(error => {
+        alert("Failed to load flashcards.");
+        console.error("Error loading flashcards:", error);
+      });
+  }
+
+
   return (
     <div className="flex flex-col items-center m-5">
       {
@@ -124,7 +158,6 @@ export default function FlashcardPage() {
 
       {/* AddCardModal component to add new cards */}
       <AddCardModal onAddCard={handleAddCard} />
-
     </div>
   )
 }
